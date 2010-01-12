@@ -5,6 +5,8 @@ class TwitterProxyServer {
 	var $config;
 	var $plugins;
 	
+	var $request;
+	
 	private $pluginPostfix = 'Plugin';
 	
 	function __construct($config) {
@@ -13,6 +15,8 @@ class TwitterProxyServer {
 	
 	function dispatch() {
 		//var_dump($_SERVER);
+		
+		$this->loadRequest();
 		
 		$this->loadPlugins();
 		
@@ -63,6 +67,16 @@ class TwitterProxyServer {
 		
 		
 		return true;
+	}
+	
+	function loadRequest() {
+		$this->request = array(
+			'method' => $_SERVER['REQUEST_METHOD'],
+			'path' => @$_SERVER['PATH_INFO'],
+			'query' => $_SERVER['QUERY_STRING'],
+			'get' => $_GET,
+			'post' => $_POST,
+		);
 	}
 	
 	function loadPlugins() {
