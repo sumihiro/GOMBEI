@@ -20,26 +20,7 @@ class TwitterProxyServer {
 		
 		$this->loadPlugins();
 		
-		$url = $this->config['Twitter']['api'];
-		if(isset($_SERVER['PATH_INFO'])) {
-			$url .= $_SERVER['PATH_INFO'];
-		}
-		if(isset($_SERVER['QUERY_STRING'])) {
-			$url .= '?'.$_SERVER['QUERY_STRING'];
-		}
-		
-		$option = array(
-			'allow_redirect' => false
-		);
-		
-		$req = new HTTP_Request($url,array_merge($this->config['HTTP_Request'],$option));
-		$req->setMethod($_SERVER['REQUEST_METHOD']);
-		if(isset($_SERVER["PHP_AUTH_USER"])) {
-			$req->setBasicAuth($_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]);
-		}
-		foreach($_POST as $k => $v) {
-			$req->setPostData($k,$v);
-		}
+		$req = $this->createTwtterReqest();
 		
 		$req = $this->hook('willRequest',$req);
 		
@@ -108,6 +89,31 @@ class TwitterProxyServer {
 			}
 		}
 		return $param;
+	}
+	
+	function createTwitterRequest() {
+		$url = $this->config['Twitter']['api'];
+		if(isset($_SERVER['PATH_INFO'])) {
+			$url .= $_SERVER['PATH_INFO'];
+		}
+		if(isset($_SERVER['QUERY_STRING'])) {
+			$url .= '?'.$_SERVER['QUERY_STRING'];
+		}
+		
+		$option = array(
+			'allow_redirect' => false
+		);
+		
+		$req = new HTTP_Request($url,array_merge($this->config['HTTP_Request'],$option));
+		$req->setMethod($_SERVER['REQUEST_METHOD']);
+		if(isset($_SERVER["PHP_AUTH_USER"])) {
+			$req->setBasicAuth($_SERVER["PHP_AUTH_USER"],@$_SERVER["PHP_AUTH_PW"]);
+		}
+		foreach($_POST as $k => $v) {
+			$req->setPostData($k,$v);
+		}
+		
+		return $req;
 	}
 	
 	function header($k,$v) {

@@ -9,6 +9,12 @@ $config = array(
 	'HTTP_Request' => array(
 		'proxy_host' => 'some host',
 		'proxy_port' => 8000
+	),
+	'Plugin' => array(
+		'HatenaBookmark' => array(
+			'id' => 'your id',
+			'password' => 'your password'
+		)
 	)
 );
 
