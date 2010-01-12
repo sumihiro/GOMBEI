@@ -50,9 +50,13 @@ class TwitterProxyServer {
 			return false;
 		}
 		
+		$response = new TwitterProxyServerResponse($req->getResponseCode(),$req->getResponseReason(),$req->getResponseHeader(),$req->getResponseBody());
+		
+		$response = $this->hook('willResponse',$response);
+		
 		// レスポンス表示
-		header('HTTP/1.0 '.$req->getResponseCode().' '.$req->getResponseReason());
-		foreach($req->getResponseHeader() as $k => $v) {
+		header('HTTP/1.0 '.$response->getResponseCode().' '.$response->getResponseReason());
+		foreach($response->getResponseHeader() as $k => $v) {
 			switch($k) {
 			case 'content-type':
 				$this->header('Content-Type',$v);
@@ -63,7 +67,7 @@ class TwitterProxyServer {
 			}
 		}
 		
-		echo $req->getResponseBody();
+		echo $response->getResponseBody();
 		
 		
 		return true;
@@ -117,6 +121,45 @@ class TwitterProxyServer {
 	}
 }
 
-
+class TwitterProxyServerResponse {
+	var $_code;
+	var $_reason;
+	var $_header;
+	var $_body;
+	function __construct($code,$reason,$header,$body) {
+		$this->_code = $code;
+		$this->_reason = $reason;
+		$this->_header = $header;
+		$this->_body = $body;
+	}
+	
+	function getResponseCode() {
+		return $this->_code;
+	}
+	function setResponseCode($code) {
+		$this->_code = $code;
+	}
+	
+	function getResponseReason() {
+		return $this->_reason;
+	}
+	function setResponseReason($reason) {
+		$this->_reason = $reason;
+	}
+	
+	function getResponseHeader() {
+		return $this->_header;
+	}
+	function setResponseHeader($header) {
+		$this->_header = $header;
+	}
+	
+	function getResponseBody() {
+		return $this->_body;
+	}
+	function setResponseBody($body) {
+		$this->_body = $body;
+	}
+}
 
 ?>
