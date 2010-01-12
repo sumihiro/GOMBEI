@@ -1,11 +1,7 @@
 <?php
 
-class SamplePlugin {
-	var $server;
-	function __construct($server) {
-		$this->server = $server;
-	}
-	
+class SamplePlugin extends TwitterProxyPlugin {
+	// @param $request HTTP_Request オブジェクト
 	function willRequest($request) {
 		if(strpos($this->server->request['path'],'/statuses/') === 0) {
 			// status 取得時は強制200件取得にする

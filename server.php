@@ -162,4 +162,30 @@ class TwitterProxyServerResponse {
 	}
 }
 
+class TwitterProxyPlugin {
+	var $server;
+	
+	// @param $server TwitterProxyServer オブジェクト
+	function __construct($server) {
+		$this->server = $server;
+	}
+	
+	/*
+	// @param $request HTTP_Request オブジェクト
+	function willRequest($request) {
+		
+		return $request;
+	}
+	*/
+	
+	/*
+	// @param $response TwitterProxyServerResponse オブジェクト
+	function willResponse($response) {
+		
+		return $response;
+	}
+	*/
+	
+}
+
 ?>
