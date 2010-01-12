@@ -1,3 +1,10 @@
 GOMBEI は twitter の俺俺プロキシプロジェクトです。
 
+使い方：
+・APIのURLを設定できるついったークライアントを用意する。iPhoneでオススメはtweetie2。
+・このレポジトリをダウンロードし、サーバにアップロードする。
+・ついったークライアントのAPIをアップロードしたindex.phpに設定する。例えば http://yourserver/gombei/index.php 。
+・あとは煮るなり焼くなり！
+
+
 by Sumihiro Ueda http://twitter.com/sumihiro
