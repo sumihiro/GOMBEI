@@ -3,6 +3,9 @@ require_once 'HTTP/Request.php';
 
 class TwitterProxyServer {
 	var $config;
+	var $plugins;
+	
+	private $pluginPostfix = 'Plugin';
 	
 	function __construct($config) {
 		$this->config = $config;
@@ -10,6 +13,8 @@ class TwitterProxyServer {
 	
 	function dispatch() {
 		//var_dump($_SERVER);
+		
+		$this->loadPlugins();
 		
 		$url = $this->config['Twitter']['api'];
 		if(isset($_SERVER['PATH_INFO'])) {
@@ -31,6 +36,9 @@ class TwitterProxyServer {
 		foreach($_POST as $k => $v) {
 			$req->setPostData($k,$v);
 		}
+		
+		$req = $this->hook('willRequest',$req);
+		
 		
 		$result = $req->sendRequest();
 		if(PEAR::isError($result)) {
@@ -55,6 +63,33 @@ class TwitterProxyServer {
 		
 		
 		return true;
+	}
+	
+	function loadPlugins() {
+		$dirname = './plugins';
+		$dir = opendir($dirname);
+		while(($file = readdir($dir)) !== false) {
+			if($file == '.' || $file == '..') {
+				continue;
+			}
+			if(preg_match("/(.*)\.php/",$file,$match)) {
+				$class = $match[1] . $this->pluginPostfix;
+				include($dirname . '/' .$file);
+				if(class_exists($class)) {
+					$this->plugins[] = new $class($this);
+				}
+			}
+		}
+		closedir($dir);
+	}
+	
+	function hook($action,$param = null) {
+		foreach($this->plugins as $p) {
+			if(method_exists($p,$action)) {
+				$param = call_user_func(array($p,$action),$param);
+			}
+		}
+		return $param;
 	}
 	
 	function header($k,$v) {
