@@ -31,7 +31,9 @@ class TwitterProxyServer {
 			return false;
 		}
 		
-		$response = new TwitterProxyServerResponse($req->getResponseCode(),$req->getResponseReason(),$req->getResponseHeader(),$req->getResponseBody());
+		$reason = method_exists($req,'getResponseReason') ? $req->getResponseReason() : '';
+		
+		$response = new TwitterProxyServerResponse($req->getResponseCode(),$reason,$req->getResponseHeader(),$req->getResponseBody());
 		
 		$response = $this->hook('willResponse',$response);
 		
