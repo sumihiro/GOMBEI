@@ -20,7 +20,7 @@ class TwitterProxyServer {
 		
 		$this->loadPlugins();
 		
-		$req = $this->createTwtterReqest();
+		$req = $this->createTwitterRequest();
 		
 		$req = $this->hook('willRequest',$req);
 		
